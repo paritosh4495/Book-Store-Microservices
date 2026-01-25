@@ -2,15 +2,14 @@ package com.paritoshpal.catalogservice.web.controllers;
 
 import com.paritoshpal.catalogservice.domain.PageResult;
 import com.paritoshpal.catalogservice.domain.Product;
+import com.paritoshpal.catalogservice.domain.ProductNotFoundException;
 import com.paritoshpal.catalogservice.domain.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 class ProductController {
 
@@ -21,4 +20,12 @@ class ProductController {
         // Logic to fetch and return products
         return productService.getProducts(pageNo);
     }
+
+    @GetMapping("/{code}")
+    ResponseEntity<Product> getProductByCode(@PathVariable String code) {
+        return productService.getProductByCode(code)
+                .map(ResponseEntity::ok)
+                .orElseThrow(()-> ProductNotFoundException.forCode(code));
+    }
+
 }

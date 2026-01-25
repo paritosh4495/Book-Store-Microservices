@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -21,7 +22,7 @@ public class ProductService {
 
     public PageResult<Product> getProducts(int pagenNo) {
         Sort sort = Sort.by("name").ascending();
-        pagenNo = pagenNo<=1 ? 0 : pagenNo -1;
+        pagenNo = pagenNo <= 1 ? 0 : pagenNo - 1;
         Pageable pageable = PageRequest.of(pagenNo, applicationProperties.pageSize(), sort);
         Page<Product> productPage = productRepository.findAll(pageable)
                 .map(ProductMapper::toProduct);
@@ -30,7 +31,7 @@ public class ProductService {
         return new PageResult<>(
                 productPage.getContent(),
                 (int) productPage.getTotalElements(),
-                productPage.getNumber() +1,
+                productPage.getNumber() + 1,
                 productPage.getTotalPages(),
                 productPage.isFirst(),
                 productPage.isLast(),
@@ -40,5 +41,9 @@ public class ProductService {
 
     }
 
-
+    public Optional<Product> getProductByCode(String code) {
+        return productRepository.findByCode(code)
+                .map(ProductMapper::toProduct);
     }
+
+}
