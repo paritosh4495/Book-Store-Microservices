@@ -1,4 +1,4 @@
-package com.paritoshpal.orderservice.web.controller.exception;
+package com.paritoshpal.orderservice.web.exception;
 
 import com.paritoshpal.orderservice.domain.OrderNotFoundException;
 import org.springframework.http.HttpStatus;
