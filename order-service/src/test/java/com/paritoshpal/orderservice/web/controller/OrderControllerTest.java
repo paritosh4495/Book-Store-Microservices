@@ -1,14 +1,13 @@
 package com.paritoshpal.orderservice.web.controller;
 
 import com.paritoshpal.orderservice.AbstractIT;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class OrderControllerTest extends AbstractIT {
 
@@ -46,8 +45,8 @@ class OrderControllerTest extends AbstractIT {
                             "country": "United Kingdom"
                           }
                         }
-                        
-                                        
+                
+                
                 """;
 
             var response = given()
