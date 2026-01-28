@@ -29,4 +29,13 @@ public class OrderMapper {
         newOrder.setItems(orderItems);
         return newOrder;
     }
+
+    static OrderItem fromOrderItemEntity(OrderItemEntity entity){
+        return new OrderItem(
+                entity.getCode(),
+                entity.getName(),
+                entity.getPrice(),
+                entity.getQuantity()
+        );
+    }
 }

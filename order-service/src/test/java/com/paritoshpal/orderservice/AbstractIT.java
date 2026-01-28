@@ -59,8 +59,4 @@ public abstract class AbstractIT {
                                 """
                                         .formatted(code,name,price.doubleValue()))));
     }
-
-
-
-
 }
