@@ -1,16 +1,22 @@
 package com.paritoshpal.orderservice.web.controller;
 
 import com.paritoshpal.orderservice.AbstractIT;
+import com.paritoshpal.orderservice.domain.models.OrderSummary;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+@Sql("/test-orders.sql")
 class OrderControllerTest extends AbstractIT {
 
     @Nested
@@ -100,6 +106,38 @@ class OrderControllerTest extends AbstractIT {
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+    }
 
+    @Nested
+    class GetOrdersTests {
+
+        @Test
+        void shouldGetOrdersSuccessfully(){
+            List<OrderSummary> orderSummaries = given()
+                    .when()
+                    .get("/api/orders")
+                    .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract()
+                    .body()
+                    .as(new TypeRef<>() {});
+
+            assertEquals(2, orderSummaries.size());
+        }
+    }
+
+    @Nested
+    class GetOrderByOrderNumberTests {
+        String orderNumber = "order-123";
+
+        @Test
+        void shouldGetOrderSuccessfully() {
+            given().when()
+                    .get("/api/orders/{orderNumber}", orderNumber)
+                    .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("orderNumber", org.hamcrest.Matchers.equalTo(orderNumber))
+                    .body("items.size()", org.hamcrest.Matchers.equalTo(2));
+        }
     }
 }
