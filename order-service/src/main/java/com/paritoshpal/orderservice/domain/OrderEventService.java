@@ -2,8 +2,7 @@ package com.paritoshpal.orderservice.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paritoshpal.orderservice.domain.models.OrderCreatedEvent;
-import com.paritoshpal.orderservice.domain.models.OrderEventType;
+import com.paritoshpal.orderservice.domain.models.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +35,44 @@ public class OrderEventService {
         log.info("OrderCreatedEvent Saved Successfully");
     }
 
+    void save(OrderDeliveredEvent event){
+        OrderEventEntity orderEvent = new OrderEventEntity();
+        orderEvent.setEventId(event.eventId());
+        orderEvent.setEventType(OrderEventType.ORDER_DELIVERED);
+        orderEvent.setOrderNumber(event.orderNumber());
+        orderEvent.setCreatedAt(event.createdAt());
+        orderEvent.setPayload(toJasonPayload(event));
+        log.info("Saving OrderDeliveredEvent with eventId: {} for orderNumber: {}", event.eventId(), event.orderNumber());
+        orderEventRepository.save(orderEvent);
+        log.info("OrderDeliveredEvent Saved Successfully");
+    }
+
+    void save(OrderCancelledEvent event){
+        OrderEventEntity orderEvent = new OrderEventEntity();
+        orderEvent.setEventId(event.eventId());
+        orderEvent.setEventType(OrderEventType.ORDER_CANCELED);
+        orderEvent.setOrderNumber(event.orderNumber());
+        orderEvent.setCreatedAt(event.createdAt());
+        orderEvent.setPayload(toJasonPayload(event));
+        log.info("Saving OrderCancelledEvent with eventId: {} for orderNumber: {}", event.eventId(), event.orderNumber());
+        orderEventRepository.save(orderEvent);
+        log.info("OrderCancelledEvent Saved Successfully");
+    }
+
+    void save(OrderErrorEvent event){
+        OrderEventEntity orderEvent = new OrderEventEntity();
+        orderEvent.setEventId(event.eventId());
+        orderEvent.setEventType(OrderEventType.ORDER_PROCESSING_FAILED);
+        orderEvent.setOrderNumber(event.orderNumber());
+        orderEvent.setCreatedAt(event.createdAt());
+        orderEvent.setPayload(toJasonPayload(event));
+        log.info("Saving OrderErrorEvent with eventId: {} for orderNumber: {}", event.eventId(), event.orderNumber());
+        orderEventRepository.save(orderEvent);
+        log.info("OrderErrorEvent Saved Successfully");
+    }
+
+
+
     public void publishOrderEvents(){
         // 1. To Fetch all the unprocessed order events from the database Sort it by createdAt
         Sort sort = Sort.by("createdAt").ascending();
@@ -60,6 +97,21 @@ public class OrderEventService {
                 OrderCreatedEvent orderCreatedEvent = fromJsonPayload(event.getPayload(), OrderCreatedEvent.class);
                 // Publish to RabbitMQ
                 orderEventPublisher.publish(orderCreatedEvent);
+                break;
+            case ORDER_DELIVERED:
+                OrderDeliveredEvent orderDeliveredEvent = fromJsonPayload(event.getPayload(), OrderDeliveredEvent.class);
+                // Publish to RabbitMQ
+                orderEventPublisher.publish(orderDeliveredEvent);
+                break;
+            case ORDER_CANCELED:
+                OrderCancelledEvent orderCancelledEvent = fromJsonPayload(event.getPayload(), OrderCancelledEvent.class);
+                // Publish to RabbitMQ
+                orderEventPublisher.publish(orderCancelledEvent);
+                break;
+            case ORDER_PROCESSING_FAILED:
+                OrderErrorEvent orderErrorEvent = fromJsonPayload(event.getPayload(), OrderErrorEvent.class);
+                // Publish to RabbitMQ
+                orderEventPublisher.publish(orderErrorEvent);
                 break;
             default:
                 log.warn("Unsupported OrderEventType: {}", eventType);
