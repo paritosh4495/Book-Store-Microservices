@@ -134,6 +134,22 @@
             <version>${instancio.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>3.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- Source: https://mvnrepository.com/artifact/org.wiremock.integrations.testcontainers/wiremock-testcontainers-module -->
+        <dependency>
+            <groupId>org.wiremock.integrations.testcontainers</groupId>
+            <artifactId>wiremock-testcontainers-module</artifactId>
+            <version>1.0-alpha-15</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
     <build>

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
+
 import static io.restassured.RestAssured.given;
 
 
@@ -15,6 +17,7 @@ class OrderControllerTest extends AbstractIT {
    class CreateOrderTests {
         @Test
         void shouldCreateOrderSuccessfully() {
+            mockGetProductByCode("SKU-101", "Wireless Mouse", new BigDecimal("25.99"));
             var payload = """
                         {
                           "items": [
@@ -23,12 +26,6 @@ class OrderControllerTest extends AbstractIT {
                               "name": "Wireless Mouse",
                               "price": 25.99,
                               "quantity": 2
-                            },
-                            {
-                              "code": "SKU-202",
-                              "name": "Mechanical Keyboard",
-                              "price": 89.50,
-                              "quantity": 1
                             }
                           ],
                           "customer": {
