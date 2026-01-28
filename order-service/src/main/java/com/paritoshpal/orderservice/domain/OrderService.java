@@ -1,9 +1,6 @@
 package com.paritoshpal.orderservice.domain;
 
-import com.paritoshpal.orderservice.domain.models.CreateOrderRequest;
-import com.paritoshpal.orderservice.domain.models.CreateOrderResponse;
-import com.paritoshpal.orderservice.domain.models.OrderCreatedEvent;
-import com.paritoshpal.orderservice.domain.models.OrderStatus;
+import com.paritoshpal.orderservice.domain.models.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -11,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -68,5 +66,15 @@ public class OrderService {
     private boolean canBeDelivered(OrderEntity order) {
         String country = order.getDeliveryAddress().country();
         return DELIVERY_ALLOWED_COUNTRIES.contains(country.toUpperCase());
+    }
+
+    public List<OrderSummary> findOrders(String userName) {
+       return orderRepository.findByUserName(userName);
+    }
+
+
+    public Optional<OrderDTO> findUserOrder(String userName, String orderNumber) {
+        return orderRepository.findByUserNameAndOrderNumber(userName, orderNumber).
+                map(OrderMapper::convertToDTO);
     }
 }

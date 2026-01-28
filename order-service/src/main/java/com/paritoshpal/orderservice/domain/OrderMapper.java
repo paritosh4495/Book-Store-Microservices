@@ -1,8 +1,10 @@
 package com.paritoshpal.orderservice.domain;
 
 import com.paritoshpal.orderservice.domain.models.CreateOrderRequest;
+import com.paritoshpal.orderservice.domain.models.OrderDTO;
 import com.paritoshpal.orderservice.domain.models.OrderItem;
 import com.paritoshpal.orderservice.domain.models.OrderStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +38,23 @@ public class OrderMapper {
                 entity.getName(),
                 entity.getPrice(),
                 entity.getQuantity()
+        );
+    }
+
+    static OrderDTO convertToDTO( OrderEntity order) {
+        Set<OrderItem> items = new HashSet<>();
+        for(OrderItemEntity itemEntity : order.getItems()){
+            items.add(fromOrderItemEntity(itemEntity));
+        }
+        return new OrderDTO(
+                order.getOrderNumber(),
+                order.getUserName(),
+                items,
+                order.getCustomer(),
+                order.getDeliveryAddress(),
+                order.getOrderStatus(),
+                order.getComments(),
+                order.getCreatedAt()
         );
     }
 }
