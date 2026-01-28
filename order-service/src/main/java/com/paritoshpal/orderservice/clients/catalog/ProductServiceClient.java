@@ -1,5 +1,6 @@
 package com.paritoshpal.orderservice.clients.catalog;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,9 @@ public class ProductServiceClient {
 
     private final RestClient restClient;
 
+    @Retry(name = "catalog-service")
     public Optional<Product> getProductByCode(String code){
         log.info("Fetching product for code : {} from Catalog Service", code);
-     try {
          var product = restClient
                  .get()
                  .uri("/api/products/{code}",code)
@@ -26,9 +27,4 @@ public class ProductServiceClient {
                  .body(Product.class);
          return Optional.ofNullable(product);
      }
-        catch (Exception e){
-            log.error("Error fetching product for code: {}. Error: {}", code, e.getMessage());
-            return Optional.empty();
-        }
-    }
 }

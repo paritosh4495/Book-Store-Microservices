@@ -31,7 +31,7 @@ class ProductController {
 
     void sleep(){
         try {
-            Thread.sleep(3000);
+            Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
