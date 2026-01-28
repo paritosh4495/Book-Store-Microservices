@@ -17,7 +17,7 @@ public class ProductServiceClient {
 
     private final RestClient restClient;
 
-    @Retry(name = "catalog-service")
+    @Retry(name = "catalog-service", fallbackMethod ="getProductByCodeFallback" )
     public Optional<Product> getProductByCode(String code){
         log.info("Fetching product for code : {} from Catalog Service", code);
          var product = restClient
@@ -27,4 +27,11 @@ public class ProductServiceClient {
                  .body(Product.class);
          return Optional.ofNullable(product);
      }
+
+     Optional<Product> getProductByCodeFallback(String code, Throwable t) {
+         System.out.println("Fallback executed for getProductByCode with code: " + code);
+         log.error("Failed to fetch product for code: {} from Catalog Service. Error: {}", code, t.getMessage());
+         return Optional.empty();
+     }
+
 }
