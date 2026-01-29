@@ -1,3 +1,6 @@
 ./mvnw -pl catalog-service spring-boot:build-image -DskipTests
+./mvnw -pl order-service spring-boot:build-image -DskipTests
+./mvnw -pl api-gateway spring-boot:build-image -DskipTests
+./mvnw -pl notification-service spring-boot:build-image -DskipTests
 
 docker compose -f infra.yml -f apps.yml up -d
