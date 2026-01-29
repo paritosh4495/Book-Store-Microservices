@@ -1,6 +1,7 @@
 package com.paritoshpal.notificationservice.events;
 
 import com.paritoshpal.notificationservice.domain.NotificationService;
+import com.paritoshpal.notificationservice.domain.OrderEventEntity;
 import com.paritoshpal.notificationservice.domain.OrderEventRepository;
 import com.paritoshpal.notificationservice.domain.models.OrderCancelledEvent;
 import com.paritoshpal.notificationservice.domain.models.OrderCreatedEvent;
@@ -30,6 +31,8 @@ class OrderEventHandler {
             return;
         }
         notificationService.sendOrderCreatedNotification(event);
+        OrderEventEntity orderEventEntity = new OrderEventEntity(event.eventId());
+        orderEventRepository.save(orderEventEntity);
     }
 
     @RabbitListener(queues = "${notifications.delivered-orders-queue}")
@@ -41,6 +44,8 @@ class OrderEventHandler {
             return;
         }
         notificationService.sendOrderDeliveredNotification(event);
+        OrderEventEntity orderEventEntity = new OrderEventEntity(event.eventId());
+        orderEventRepository.save(orderEventEntity);
     }
 
     @RabbitListener(queues = "${notifications.cancelled-orders-queue}")
@@ -52,6 +57,8 @@ class OrderEventHandler {
             return;
         }
         notificationService.sendOrderCancelledNotification(event);
+        OrderEventEntity orderEventEntity = new OrderEventEntity(event.eventId());
+        orderEventRepository.save(orderEventEntity);
     }
 
     @RabbitListener(queues = "${notifications.error-orders-queue}")
@@ -63,6 +70,8 @@ class OrderEventHandler {
             return;
         }
         notificationService.sendOrderErrorEventNotification(event);
+        OrderEventEntity orderEventEntity = new OrderEventEntity(event.eventId());
+        orderEventRepository.save(orderEventEntity);
     }
 
 

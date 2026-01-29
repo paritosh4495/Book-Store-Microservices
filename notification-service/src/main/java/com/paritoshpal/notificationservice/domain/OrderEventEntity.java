@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 @Setter
 public class OrderEventEntity {
 
+    public OrderEventEntity(String eventId) {
+        this.eventId = eventId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_event_id_generator")
     @SequenceGenerator(name = "order_event_id_generator", sequenceName = "order_event_id_seq")
