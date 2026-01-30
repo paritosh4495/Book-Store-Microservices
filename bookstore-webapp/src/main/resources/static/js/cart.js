@@ -1,0 +1,58 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.data('initData', () => ({
+        cart: { items: [], totalAmount: 0 },
+        orderForm: {
+            customer: {
+                name: "Paritosh",
+                email: "paritosh@gmail.com",
+                phone: "999999999999"
+            },
+            deliveryAddress: {
+                addressLine1: "61 Sidney Grove",
+                addressLine2: "Near Brighton Grove",
+                city:"NewCastle Upon Tyne",
+                state: "NCL",
+                zipCode: "NE4 5PD",
+                country: "United Kingdom"
+            }
+        },
+
+        init() {
+            updateCartItemCount();
+            this.loadCart();
+            this.cart.totalAmount = getCartTotal();
+        },
+        loadCart() {
+            this.cart = getCart()
+        },
+        updateItemQuantity(code, quantity) {
+            updateProductQuantity(code, quantity);
+            this.loadCart();
+            this.cart.totalAmount = getCartTotal();
+        },
+        removeCart() {
+            deleteCart();
+        },
+        createOrder() {
+            let order = Object.assign({}, this.orderForm, {items: this.cart.items});
+            //console.log("Order ", order);
+
+            $.ajax ({
+                url: apiGatewayUrl + '/orders/api/orders',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data : JSON.stringify(order),
+                success: (resp) => {
+                    //console.log("Order Resp:", resp)
+                    this.removeCart();
+                    //alert("Order placed successfully")
+                    window.location = "/orders/"+resp.orderNumber;
+                }, error: (err) => {
+                    console.log("Order Creation Error:", err)
+                    alert("Order creation failed")
+                }
+            });
+        },
+    }))
+});
