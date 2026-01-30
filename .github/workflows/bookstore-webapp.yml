@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./bookstore-webapp
-      DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-webapp
+      DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-bookstore-webapp
     defaults:
       run:
         working-directory: ${{ env.working-directory }}
