@@ -94,7 +94,6 @@ services:
         limits:
           memory: 512M
 
-
   mailhog:
     image: mailhog/mailhog:v1.0.1
     container_name: mailhog
@@ -102,4 +101,19 @@ services:
       - "1025:1025"
       - "8025:8025"
 
-
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin1234
+    command: ["start-dev", "--http-port=9191"]
+    volumes:
+      - ./keycloak-data:/opt/keycloak/data
+    ports:
+      - "9191:9191"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
