@@ -5,3 +5,6 @@
 ./mvnw -pl bookstore-webapp spring-boot:build-image -DskipTests
 
 docker compose -f infra.yml -f apps.yml up -d
+
+
+docker compose -f infra.yml run --rm keycloak export --dir /opt/keycloak/data/import --realm bookstore --users realm_file

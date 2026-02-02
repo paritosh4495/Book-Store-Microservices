@@ -107,6 +107,9 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin1234
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 9191
+      KC_HOSTNAME_STRICT: false
     command: ["start-dev", "--http-port=9191"]
     volumes:
       - ./keycloak-data:/opt/keycloak/data
