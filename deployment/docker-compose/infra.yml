@@ -107,7 +107,7 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin1234
-      KC_HOSTNAME: localhost
+      KC_HOSTNAME: keycloak
       KC_HOSTNAME_PORT: 9191
       KC_HOSTNAME_STRICT: false
     command: ["start-dev", "--http-port=9191"]
@@ -115,6 +115,11 @@ services:
       - ./keycloak-data:/opt/keycloak/data
     ports:
       - "9191:9191"
+    healthcheck:
+      test: [ "CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9191" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     deploy:
       resources:
         limits:
